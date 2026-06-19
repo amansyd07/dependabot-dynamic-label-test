@@ -1,8 +1,7 @@
 version: 2
 
-# ⚠️ FAILURE CASE: Attempting to use dynamic GitHub Actions expressions
-# This configuration will NOT work because Dependabot parses this file
-# statically and cannot evaluate runtime expressions like ${{ github.run_id }}
+# ✅ SUCCESS CASE: Using static labels
+# This configuration will work because Dependabot can match static labels
 
 updates:
   - package-ecosystem: "npm"
@@ -13,12 +12,11 @@ updates:
       time: "09:00"
       timezone: "America/New_York"
     
-    # ❌ PROBLEM: This syntax is invalid for Dependabot
-    # Dependabot expects static labels, not dynamic expressions
-    # The expressions ${{ github.run_id }} and ${{ github.run_attempt }}
-    # do not exist when dependabot.yml is parsed
+    # ✅ SOLUTION: Use static labels instead of dynamic expressions
+    # This label will match any runner registered with "codebuild-dependabot"
     runs-on: 
-      - codebuild-dependabot-${{ github.run_id }}-${{ github.run_attempt }}
+      - self-hosted
+      - codebuild-dependabot
     
     # Configuration options
     open-pull-requests-limit: 5
