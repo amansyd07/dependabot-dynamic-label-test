@@ -1,0 +1,44 @@
+version: 2
+
+# ⚠️ FAILURE CASE: Attempting to use dynamic GitHub Actions expressions
+# This configuration will NOT work because Dependabot parses this file
+# statically and cannot evaluate runtime expressions like ${{ github.run_id }}
+
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    
+    schedule:
+      interval: "daily"
+      time: "09:00"
+      timezone: "America/New_York"
+    
+    # ❌ PROBLEM: This syntax is invalid for Dependabot
+    # Dependabot expects static labels, not dynamic expressions
+    # The expressions ${{ github.run_id }} and ${{ github.run_attempt }}
+    # do not exist when dependabot.yml is parsed
+    runs-on: 
+      - codebuild-dependabot-${{ github.run_id }}-${{ github.run_attempt }}
+    
+    # Configuration options
+    open-pull-requests-limit: 5
+    
+    # PR labels
+    labels:
+      - "dependencies"
+      - "npm"
+      - "automated"
+    
+    # Commit message preferences
+    commit-message:
+      prefix: "npm"
+      prefix-development: "npm(dev)"
+      include: "scope"
+    
+    # Reviewers (optional - add your GitHub username)
+    # reviewers:
+    #   - "your-github-username"
+    
+    # Assignees (optional)
+    # assignees:
+    #   - "your-github-username"
